@@ -33,7 +33,18 @@ export interface User {
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://127.0.0.1:5000/api';
+  private getApiUrl(): string {
+    if (typeof window !== 'undefined') {
+      const origin = window.location.origin;
+      if (origin.includes(':4200')) {
+        return 'http://127.0.0.1:5000/api';
+      }
+      return origin + '/api';
+    }
+    return 'http://127.0.0.1:5000/api';
+  }
+
+  private apiUrl = this.getApiUrl();
   private currentUserSubject = new BehaviorSubject<User | null>(this.getStoredUser());
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -65,7 +76,13 @@ export class ApiService {
     if (!path) return 'assets/default-avatar.png';
     if (path.startsWith('http')) return path;
     if (path.startsWith('data:image')) return path;
-    return `http://127.0.0.1:5000${path}`;
+    if (typeof window !== 'undefined') {
+      if (window.location.origin.includes(':4200')) {
+        return 'http://127.0.0.1:5000' + path;
+      }
+      return window.location.origin + path;
+    }
+    return 'http://127.0.0.1:5000' + path;
   }
 
   // AUTH
