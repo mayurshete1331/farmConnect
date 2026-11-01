@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment variables
+.env
+.env.local
+backend/.env
+
+# Angular cache & builds
+.angular/
+frontend/.angular/
+frontend/dist/
+dist/
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db
