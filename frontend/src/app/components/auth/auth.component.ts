@@ -51,7 +51,7 @@ import { ApiService } from '../../services/api.service';
             <input 
               type="tel" 
               class="form-control" 
-              placeholder="e.g. 9876543210" 
+              placeholder="Enter your registered mobile number" 
               [(ngModel)]="loginPhone" 
               name="phone" 
               required>
@@ -68,18 +68,13 @@ import { ApiService } from '../../services/api.service';
           </div>
 
           <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
-            {{ loading ? 'Signing In...' : 'Sign In' }}
+            {{ loading ? 'Signing In...' : 'Sign In to FarmConnect' }}
           </button>
 
-          <!-- Quick Test Logins -->
-          <div class="demo-logins">
-            <p class="demo-title">Quick Demo Login (Password: password123):</p>
-            <div class="demo-buttons">
-              <button type="button" class="btn btn-sm btn-outline" (click)="quickFill('9999999999')">🛡️ Admin</button>
-              <button type="button" class="btn btn-sm btn-outline" (click)="quickFill('9876543210')">👨‍🌾 Farmer</button>
-              <button type="button" class="btn btn-sm btn-outline" (click)="quickFill('9123456780')">🚚 Driver</button>
-              <button type="button" class="btn btn-sm btn-outline" (click)="quickFill('9811122233')">🛒 Customer</button>
-            </div>
+          <!-- Professional Security & Support Trust Footer -->
+          <div class="auth-trust-footer">
+            <span class="trust-shield">🔒 256-Bit Encrypted • Verified Farm Origin</span>
+            <p class="help-link">Need help accessing your account? Contact your society coordinator.</p>
           </div>
         </form>
 
@@ -87,7 +82,7 @@ import { ApiService } from '../../services/api.service';
         <form *ngIf="mode === 'register'" (ngSubmit)="onRegister()">
           <!-- Role Selector -->
           <div class="form-group">
-            <label class="form-label">I am a:</label>
+            <label class="form-label">I am registering as:</label>
             <div class="role-grid">
               <label class="role-card" [class.selected]="regData.role === 'consumer'">
                 <input type="radio" [(ngModel)]="regData.role" name="role" value="consumer">
@@ -115,13 +110,13 @@ import { ApiService } from '../../services/api.service';
           </div>
 
           <div class="form-group">
-            <label class="form-label">Phone Number</label>
-            <input type="tel" class="form-control" [(ngModel)]="regData.phone" name="phone" required placeholder="e.g. 9876543210">
+            <label class="form-label">Mobile Number</label>
+            <input type="tel" class="form-control" [(ngModel)]="regData.phone" name="phone" required placeholder="10-digit mobile number">
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-control" [(ngModel)]="regData.password" name="password" required placeholder="Create password">
+            <label class="form-label">Create Password</label>
+            <input type="password" class="form-control" [(ngModel)]="regData.password" name="password" required placeholder="Minimum 6 characters">
           </div>
 
           <div class="form-group">
@@ -152,32 +147,35 @@ import { ApiService } from '../../services/api.service';
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">UPI ID (For Advance Transfers)</label>
-              <input type="text" class="form-control" [(ngModel)]="regData.upi_id" name="upi_id" placeholder="e.g. patilfarm@upi">
+              <label class="form-label">UPI ID for Direct Payments</label>
+              <input type="text" class="form-control" [(ngModel)]="regData.upi_id" name="upi_id" placeholder="e.g. rameshpatil@okaxis">
             </div>
           </div>
 
           <!-- TRANSPORTER SPECIFIC -->
           <div *ngIf="regData.role === 'transporter'" class="special-section">
-            <h4 class="sec-title">🚚 Vehicle Details</h4>
-            <div class="form-row">
-              <div class="form-group col">
-                <label class="form-label">Vehicle Type</label>
-                <input type="text" class="form-control" [(ngModel)]="regData.vehicle_type" name="vehicle_type" placeholder="e.g. Bolero Maxi Truck">
-              </div>
-              <div class="form-group col">
-                <label class="form-label">Vehicle No.</label>
-                <input type="text" class="form-control" [(ngModel)]="regData.vehicle_number" name="vehicle_number" placeholder="e.g. MH-08-AG-4021">
-              </div>
+            <h4 class="sec-title">🚚 Vehicle & Transport Details</h4>
+            <div class="form-group">
+              <label class="form-label">Vehicle Type</label>
+              <select class="form-control" [(ngModel)]="regData.vehicle_type" name="vehicle_type">
+                <option value="Bolero Maxi Truck">Bolero Maxi Truck (1.5 Ton)</option>
+                <option value="Tata Ace / Chhota Hathi">Tata Ace / Chhota Hathi (750 kg)</option>
+                <option value="Eicher Pro Truck">Eicher Pro Truck (3-5 Ton)</option>
+                <option value="Tempo Traveller">Tempo Traveller Cargo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Vehicle Registration Number</label>
+              <input type="text" class="form-control" [(ngModel)]="regData.vehicle_number" name="vehicle_number" placeholder="e.g. MH 04 AB 1234">
             </div>
           </div>
 
           <div class="admin-notice">
-            🛡️ <strong>Admin Gatekeeper:</strong> Accounts are reviewed and approved by the Super Admin before activation.
+            ℹ️ <strong>Account Verification:</strong> New registrations are reviewed by the platform administrator for quality and location compliance before activation.
           </div>
 
           <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
-            {{ loading ? 'Submitting...' : 'Register Account' }}
+            {{ loading ? 'Submitting Application...' : 'Submit Registration' }}
           </button>
         </form>
       </div>
@@ -185,55 +183,67 @@ import { ApiService } from '../../services/api.service';
   `,
   styles: [`
     .auth-wrap {
+      min-height: 80vh;
       display: flex;
-      justify-content: center;
       align-items: center;
-      min-height: calc(100vh - 120px);
-      padding: 20px 0;
+      justify-content: center;
+      padding: 16px;
     }
     .auth-card {
       max-width: 440px;
       width: 100%;
-      border-radius: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      background: #ffffff;
       padding: 24px;
+      border: 1px solid var(--border);
     }
     .auth-header {
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
     }
     .brand {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+    }
+    .brand .icon {
+      font-size: 24px;
+    }
+    .brand h2 {
+      font-size: 20px;
+      font-weight: 800;
       color: var(--primary);
+      margin: 0;
     }
     .tagline {
+      font-size: 12px;
       color: var(--text-muted);
-      font-size: 13px;
-      margin-top: 2px;
+      margin: 4px 0 0;
     }
     .mode-toggle {
       display: flex;
       background: #f1f5f9;
-      border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 16px;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 20px;
     }
     .toggle-btn {
       flex: 1;
       padding: 8px;
-      border: none;
-      background: none;
-      border-radius: 8px;
+      font-size: 13px;
       font-weight: 600;
+      border: none;
+      background: transparent;
       color: var(--text-muted);
+      border-radius: 6px;
       cursor: pointer;
       transition: all 0.2s;
     }
     .toggle-btn.active {
-      background: #fff;
-      color: var(--primary);
+      background: #ffffff;
+      color: var(--dark);
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     .role-grid {
@@ -243,28 +253,38 @@ import { ApiService } from '../../services/api.service';
     }
     .role-card {
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 6px;
+      border-radius: 8px;
+      padding: 10px 4px;
       text-align: center;
       cursor: pointer;
+      transition: all 0.2s;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      transition: all 0.2s;
     }
-    .role-card input { display: none; }
+    .role-card input {
+      display: none;
+    }
+    .role-icon {
+      font-size: 20px;
+    }
+    .role-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--dark);
+    }
     .role-card.selected {
       border-color: var(--primary);
       background: var(--primary-light);
     }
-    .role-icon { font-size: 22px; }
-    .role-name { font-size: 13px; font-weight: 700; }
     .form-row {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
-    .form-row .col { flex: 1; }
+    .form-row .col {
+      flex: 1;
+    }
     .special-section {
       background: #f8fafc;
       border: 1px solid var(--border);
@@ -281,27 +301,32 @@ import { ApiService } from '../../services/api.service';
       background: #fefce8;
       border: 1px solid #fef08a;
       color: #854d0e;
-      font-size: 12px;
+      font-size: 11.5px;
       padding: 10px;
       border-radius: 8px;
       margin-bottom: 16px;
+      line-height: 1.4;
     }
-    .demo-logins {
-      margin-top: 20px;
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
+    .auth-trust-footer {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #f1f5f9;
       text-align: center;
     }
-    .demo-title {
-      font-size: 12px;
-      color: var(--text-muted);
+    .trust-shield {
+      font-size: 11px;
+      font-weight: 600;
+      color: #047857;
+      background: #ecfdf5;
+      padding: 3px 10px;
+      border-radius: 12px;
+      display: inline-block;
       margin-bottom: 6px;
     }
-    .demo-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 6px;
-      flex-wrap: wrap;
+    .help-link {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin: 0;
     }
   `]
 })
@@ -336,12 +361,6 @@ export class AuthComponent {
     this.mode = m;
     this.errorMessage = '';
     this.successMessage = '';
-  }
-
-  quickFill(phone: string) {
-    this.loginPhone = phone;
-    this.loginPassword = 'password123';
-    this.onLogin();
   }
 
   onLogin() {
